@@ -4,7 +4,7 @@ import requests
 # --- Configuration de la page ---
 st.set_page_config(page_title="Job Recommender G2-MG01", layout="wide", page_icon="🚀")
 
-# --- URL App Runner en dur (pas de secrets à configurer) ---
+# --- URL App Runner en dur ---
 API_BASE_URL = "https://wiavajvtnx.us-east-1.awsapprunner.com"
 
 st.title("🚀 Assistant de Recommandation de Métiers")
@@ -17,7 +17,7 @@ with st.sidebar:
     
     if st.button("Actualiser les métriques"):
         try:
-            # Appel à l'endpoint /metrics de ton FastAPI sur AWS
+            # Appel à l'endpoint /metrics 
             m_res = requests.get(f"{API_BASE_URL}/metrics", timeout=5)
             if m_res.status_code == 200:
                 data = m_res.json()
@@ -47,7 +47,7 @@ if submit:
     if not exp or not interests:
         st.warning("Veuillez remplir les champs 'Expériences' et 'Intérêts'.")
     else:
-        payload = {
+        user_input = {
             "experiences": exp,
             "interests": interests,
             "skills": [{"name": s1, "level": l1}] if s1 else [],
@@ -57,7 +57,7 @@ if submit:
         with st.spinner("Analyse sémantique sur AWS..."):
             try:
                 # Requête POST vers ton App Runner
-                response = requests.post(f"{API_BASE_URL}/predict", json=payload, timeout=15)
+                response = requests.post(f"{API_BASE_URL}/predict", json=user_input, timeout=15)
                 
                 if response.status_code == 200:
                     data = response.json()
